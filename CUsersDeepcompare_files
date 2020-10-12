@@ -1,0 +1,58 @@
+import argparse
+import os
+from os import listdir
+from os.path import isfile, join
+
+
+
+def convert_to_names(folder1_path, folder2_path):
+    pdf_files = []
+    yaml_file = []
+    try:
+        folder1 = [f for f in listdir(folder1_path) if isfile(join(folder1_path, f))]
+        folder2 = [f for f in listdir(folder2_path) if isfile(join(folder2_path, f))]
+    except NotADirectoryError as err:
+        print(str(err))
+
+    else:
+        for f1 in folder1:
+            base = os.path.basename(f1)
+            file_name1 = os.path.splitext(base)[0]
+            #print(file_name1)
+            pdf_files.append(file_name1)
+
+        for f2 in folder2:
+            base2 = os.path.basename(f2)
+            file_name2 = os.path.splitext(base2)[0]
+            file_name3 = os.path.splitext(file_name2)[0]
+            #print(file_name3)
+            yaml_file.append(file_name3)
+    get_comparision = compare_file_names(pdf_files,yaml_file)
+    
+def compare_file_names(pdf_file, yaml_file):
+    #print(yaml_file)
+    print("the files which are not in the yaml folder")
+    for pdf in pdf_file:
+        if pdf not in yaml_file:
+            print(pdf)
+        
+
+    
+def main():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        '--folder1_path', '-f1',
+        help="input pdf directory",
+        type=str)
+
+    parser.add_argument(
+        '--folder2_path','-f2',
+        help="input yaml directory",
+        type=str)
+
+    args = parser.parse_args()
+    convert_to_names(args.folder1_path, args.folder2_path)
+
+if __name__ == '__main__':
+    main()
